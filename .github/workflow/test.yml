@@ -1,0 +1,15 @@
+name: Test
+on: [ push, pull_request ]
+jobs:
+  test:
+    runs_on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 
+        uses: actions/setup-python@v2
+        with:
+          python_version: 3.8
+      - name: install dependencies
+        run: pip install -r requirements/local.txt
+      - name: Test with Pytest
+        run: pytest
