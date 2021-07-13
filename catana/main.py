@@ -1,19 +1,17 @@
-from typing import Optional
-
+"""Main module"""
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 from catana.api.routes.api import router
 from catana.api.errors.error import http_error_handler
 
-app = FastAPI()
-
 
 def get_app() -> FastAPI:
-    app = FastAPI(title="Catana", debug=True, version=1)
-    app.include_router(router, prefix="/api")
-    app.add_exception_handler(HTTPException, http_error_handler)
+    """Initialize FastAPI modules and return initialized modules"""
+    app_init = FastAPI(title="Catana", debug=True, version=1)
+    app_init.include_router(router, prefix="/api")
+    app_init.add_exception_handler(HTTPException, http_error_handler)
 
-    return app
+    return app_init
 
 
 app = get_app()
