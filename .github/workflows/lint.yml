@@ -6,12 +6,14 @@ on:
     branches: [ main, develop ]
 jobs:
   lint:
-    - uses: actions/checkout@v2
-    - name: Set up Python 
-      uses: actions/setup-python@v2
-      with:
-        python_version: 3.8
-    - name: install dependencies
-      run: pip install -r requirements/local.txt
-    - name: Lint with pylint
-      run: pylint ./catana
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 
+        uses: actions/setup-python@v2
+        with:
+          python_version: 3.8
+      - name: install dependencies
+        run: pip install -r requirements/local.txt
+      - name: Lint with pylint
+        run: pylint ./catana
