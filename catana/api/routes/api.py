@@ -1,3 +1,4 @@
+"""Main module to include routers"""
 from fastapi import APIRouter
 from catana.api.routes import about
 
