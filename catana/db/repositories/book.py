@@ -1,3 +1,4 @@
+from catana.api.routes import user
 from catana.models.domain.books import BookInDb
 from os import O_NOINHERIT
 from uuid import UUID
@@ -8,6 +9,9 @@ from catana.db.queries.queries import queries
 
 
 class BookRepository(BaseRepository):
+    async def return_book(self, user_id: UUID, book_id: UUID):
+        await queries.return_book(self.connection, book_id, user_id)
+
     async def assign_user(self, user_id: UUID, book_id: UUID):
         await queries.assign_user(self.connection, user_id, book_id)
 

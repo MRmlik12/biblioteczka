@@ -26,6 +26,17 @@ async def book_list_router(
     return books
 
 
+@router.post("/return")
+async def return_book(
+    book: BoughtBook = Body(..., embed=True),
+    user_repository: UserRepository = Depends(get_repository(UserRepository)),
+    books_repository: BookRepository = Depends(get_repository(BookRepository)),
+) -> JSONResponse:
+    user_id = await user_repository.get_user_id(get_email_from_token(book.token))
+    await books_repository.return_book(user_id, book.id)
+    return JSONResponse({"message": "ok"})
+
+
 @router.post("/bought")
 async def bought_book(
     book: BoughtBook = Body(..., embed=True),
