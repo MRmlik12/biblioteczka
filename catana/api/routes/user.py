@@ -20,6 +20,7 @@ async def login_user(
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
 ) -> JSONResponse:
     user = await user_repository.get_user(user_login)
+    print(user)
     if user:
         return JSONResponse({"token": generate_token(user_login.email)})
     raise HTTPException(HTTP_401_UNAUTHORIZED, "Wrong login credentials")

@@ -1,3 +1,4 @@
+from uuid import UUID
 from catana.db.queries.queries import queries
 from catana.db.repositories.base import BaseRepository
 from catana.models.domain.users import UserInDb
@@ -5,6 +6,11 @@ from catana.models.schemas.users import UserInLogin, UserInRegister
 
 
 class UserRepository(BaseRepository):
+    async def get_user_id(self, email: str) -> UUID:
+        response = await queries.get_user_id(self.connection, email)
+        print(response)
+        return response[0]["id"]
+
     async def get_user(self, user: UserInLogin) -> bool:
         user_credentials = await queries.get_user_login_credentials(
             self.connection, user.email

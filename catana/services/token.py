@@ -16,6 +16,7 @@ def generate_token(email: str) -> str:
 
 def get_email_from_token(token: str) -> str:
     try:
-        return JWTUser(jwt.decode(token, JWT_SECRET_KEY, ALGORITHM)).email
+        decode = jwt.decode(token, JWT_SECRET_KEY, ALGORITHM)
+        return decode["email"]
     except jwt.PyJWTError:
         raise ValueError("unable to decode JWT token")
