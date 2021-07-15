@@ -2,9 +2,12 @@ from pydantic import BaseModel
 from pydantic.networks import EmailStr
 
 
-class UserInRegister(BaseModel):
+class UserInLogin(BaseModel):
     email: EmailStr
-    name: str
-    surname: str
     password: str
+
+
+class UserInRegister(UserInLogin):
+    username: str
+    surname: str
     phone_number: str
