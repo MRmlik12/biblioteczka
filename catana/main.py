@@ -2,8 +2,8 @@
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 
+from catana.api.api import router
 from catana.api.errors.error import http_error_handler
-from catana.api.routes.api import router
 from catana.core.events import create_start_app_handler, create_stop_app_hadler
 
 

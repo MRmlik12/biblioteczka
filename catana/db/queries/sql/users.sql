@@ -24,3 +24,9 @@ FROM users
 WHERE email=:email
 LIMIT 1;
 
+--name: get_user_id
+
+SELECT id
+FROM users
+WHERE email=:email
+LIMIT 1;

@@ -7,6 +7,23 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: catana_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      POSTGRESQL_CONNECTION_STRING: postgresql://test:123@localhost:5432/catana_db
+      JWT_SECRET_KEY: OPdNtRVFv/lJ+sPQyvy/UDoPe4w3cE4Ld8DKWXK1hLGOoKzfyWkDVdqmwuGT2dbwyrSp5i9HOifgoKpRDpV5kg==
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 
@@ -15,5 +32,7 @@ jobs:
           python_version: 3.8
       - name: install dependencies
         run: pip install -r requirements/local.txt
+      - name: Run migrations
+        run: alembic upgrade head
       - name: Test with Pytest
         run: pytest
