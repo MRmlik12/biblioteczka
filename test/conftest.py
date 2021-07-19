@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from catana.main import get_app
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient
-from pytest_postgresql import factories
 
 
 @pytest.fixture
