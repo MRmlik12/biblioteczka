@@ -1,7 +1,7 @@
 """Main module to include routers"""
 from fastapi import APIRouter
 
-from catana.api.routes import about, user, book
+from catana.api.routes import about, book, user
 
 router = APIRouter()
 router.include_router(about.router, prefix="/about", tags=["index", "about"])

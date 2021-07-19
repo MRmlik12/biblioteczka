@@ -1,11 +1,8 @@
-from catana.api.routes import user
-from catana.models.domain.books import BookInDb
-from os import O_NOINHERIT
 from uuid import UUID
-from typing import List
-from catana.models.schemas.books import Book
-from catana.db.repositories.base import BaseRepository
+
 from catana.db.queries.queries import queries
+from catana.db.repositories.base import BaseRepository
+from catana.models.schemas.books import Book
 
 
 class BookRepository(BaseRepository):

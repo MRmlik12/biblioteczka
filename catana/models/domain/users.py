@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import UUID, uuid4
+
 from pydantic.networks import EmailStr
 
 from catana.services import hash

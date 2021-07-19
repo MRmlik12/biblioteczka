@@ -1,5 +1,6 @@
-from uuid import UUID
 from typing import Optional
+from uuid import UUID
+
 
 class Book:
     id: UUID

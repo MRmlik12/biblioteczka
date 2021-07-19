@@ -1,4 +1,5 @@
 from uuid import UUID
+
 from catana.db.queries.queries import queries
 from catana.db.repositories.base import BaseRepository
 from catana.models.domain.users import UserInDb

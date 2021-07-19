@@ -1,6 +1,7 @@
+import os
+
 from starlette import config
 from starlette.config import Config
-import os
 
 conf = Config(".env")
 POSTGRESQL_CONNECTION_STRING = os.getenv("POSTGRESQL_CONNECTION_STRING")

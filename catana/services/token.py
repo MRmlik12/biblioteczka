@@ -1,7 +1,9 @@
-from catana.models.schemas.jwt import JWTUser
 from datetime import datetime, timedelta
-from catana.core.config import JWT_SECRET_KEY
+
 import jwt
+
+from catana.core.config import JWT_SECRET_KEY
+from catana.models.schemas.jwt import JWTUser
 
 SUBJECT = "AUTH_TOKEN"
 ALGORITHM = "HS512"

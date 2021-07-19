@@ -1,20 +1,20 @@
 """About router"""
 from typing import List
 from uuid import UUID
-from catana.db.repositories.user import UserRepository
+
 from fastapi.param_functions import Body
-from starlette.exceptions import HTTPException
-from catana.db.repositories.book import BookRepository
-from catana.models.schemas.books import Book, BookResponse, BoughtBook
 from fastapi.params import Depends
 from fastapi.routing import APIRouter
-from catana.api.dependencies.database import get_repository
-from catana.services.token import get_email_from_token
-
-
+from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
-from catana.assets.strings import USER_TOKEN_IS_EMPY, BOOK_ID_IS_EMPTY
+
+from catana.api.dependencies.database import get_repository
+from catana.assets.strings import BOOK_ID_IS_EMPTY, USER_TOKEN_IS_EMPY
+from catana.db.repositories.book import BookRepository
+from catana.db.repositories.user import UserRepository
+from catana.models.schemas.books import Book, BookResponse, BoughtBook
+from catana.services.token import get_email_from_token
 
 router = APIRouter()
 
