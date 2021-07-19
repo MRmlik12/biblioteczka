@@ -7,6 +7,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.sqltypes import DateTime, TIMESTAMP
 
 revision = "150720211109"
 down_revision = None
@@ -32,6 +33,7 @@ def create_users_table() -> None:
         sa.Column("publishing", sa.String, nullable=False, index=True),
         sa.Column("is_borrowed", sa.Boolean, nullable=False, index=True, default=False),
         sa.Column("user_borrow_id", UUID(as_uuid=True), index=True, nullable=True),
+        sa.Column("updated_at", TIMESTAMP, index=True, nullable=True),
     )
     op.execute(
         """
