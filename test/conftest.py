@@ -6,12 +6,6 @@ from httpx import AsyncClient
 from pytest_postgresql import factories
 
 
-# postgresql_proc = factories.postgresql_proc(
-#     port=5432, user="test", password="123", dbname="catana_db", host="localhost"
-# )
-# postgresql2 = factories.postgresql("postgresql_proc")
-
-
 @pytest.fixture
 def app() -> FastAPI:
     return get_app()
