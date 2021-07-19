@@ -9,9 +9,9 @@ from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
 
 revision = "150720211109"
-down_revision = None
+down_revision = "140720211238"
 branch_labels = "feature/book-router"
-depends_on = None
+depends_on = "140720211238"
 
 
 def create_users_table() -> None:

@@ -11,7 +11,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 revision = "140720211238"
 down_revision = None
-branch_labels = "develop"
+branch_labels = "feature/book-router"
 depends_on = None
 
 
