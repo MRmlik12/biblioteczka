@@ -1,7 +1,13 @@
 --name: get_books
 
 SELECT *
-FROM books --name: assign_user
+FROM books --name: get_book
+
+SELECT *
+FROM books
+WHERE id=:book_id
+LIMIT 1; --name: assign_user
+
 
 UPDATE books
 SET is_borrowed=TRUE,

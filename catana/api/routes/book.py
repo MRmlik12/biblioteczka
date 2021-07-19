@@ -1,5 +1,6 @@
 """About router"""
 from typing import List
+from uuid import UUID
 from catana.db.repositories.user import UserRepository
 from fastapi.param_functions import Body
 from starlette.exceptions import HTTPException
@@ -24,6 +25,14 @@ async def book_list_router(
 ) -> JSONResponse:
     books = await books_repository.get_books()
     return books
+
+
+@router.get("/{book_id}")
+async def get_book_by_id(
+    book_id: UUID,
+    book_repository: BookRepository = Depends(get_repository(BookRepository)),
+) -> JSONResponse:
+    return await book_repository.get_book(book_id)
 
 
 @router.post("/return")

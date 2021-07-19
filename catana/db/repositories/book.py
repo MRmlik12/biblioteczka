@@ -15,6 +15,10 @@ class BookRepository(BaseRepository):
     async def assign_user(self, user_id: UUID, book_id: UUID):
         await queries.assign_user(self.connection, user_id, book_id)
 
+    async def get_book(self, book_id: UUID):
+        book = await queries.get_book(self.connection, book_id)
+        return Book(**book[0])
+
     async def get_books(self):
         books = await queries.get_books(self.connection)
         books_list = list()
