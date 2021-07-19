@@ -32,5 +32,7 @@ jobs:
           python_version: 3.8
       - name: install dependencies
         run: pip install -r requirements/local.txt
+      - name: Run migrations
+        run: alembic upgrade head
       - name: Test with Pytest
         run: pytest
