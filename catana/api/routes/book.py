@@ -21,9 +21,10 @@ router = APIRouter()
 
 @router.get("/list", response_model=List[Book])
 async def book_list(
+    page: int,
     books_repository: BookRepository = Depends(get_repository(BookRepository)),
 ) -> JSONResponse:
-    books = await books_repository.get_books()
+    books = await books_repository.get_books(page)
     return books
 
 
