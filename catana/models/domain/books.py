@@ -1,8 +1,11 @@
+"""Books domain"""
 from typing import Optional
 from uuid import UUID
 
 
 class Book:
+    """Book entity"""
+
     id: UUID
     title: str
     autor: str
@@ -14,5 +17,6 @@ class Book:
 
 
 class BookInDb(Book):
-    def assign_borrower(self, user_id: UUID):
-        self.userBorrowID = user_id
+    """Book db operations"""
+
+    pass

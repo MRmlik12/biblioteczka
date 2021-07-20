@@ -1,8 +1,9 @@
 import pytest
-from fastapi import FastAPI
-from catana.main import get_app
 from asgi_lifespan import LifespanManager
+from fastapi import FastAPI
 from httpx import AsyncClient
+
+from catana.main import get_app
 
 
 @pytest.fixture

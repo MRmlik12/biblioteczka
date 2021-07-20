@@ -1,13 +1,15 @@
+import json
+from uuid import UUID
+
 import pytest
+import sqlalchemy
 from fastapi import FastAPI
 from httpx import AsyncClient
 from sqlalchemy.sql.expression import table
 from starlette.status import HTTP_200_OK
-from catana.services.token import generate_token
+
 from catana.core.config import POSTGRESQL_CONNECTION_STRING
-from uuid import UUID
-import sqlalchemy
-import json
+from catana.services.token import generate_token
 
 pytestmark = pytest.mark.asyncio
 

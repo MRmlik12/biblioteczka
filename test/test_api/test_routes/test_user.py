@@ -1,9 +1,10 @@
-from fastapi.param_functions import Body
+import json
+
 import pytest
 from fastapi import FastAPI
+from fastapi.param_functions import Body
 from httpx import AsyncClient
 from starlette.status import HTTP_200_OK
-import json
 
 pytestmark = pytest.mark.asyncio
 

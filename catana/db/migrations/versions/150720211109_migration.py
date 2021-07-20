@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.sqltypes import DateTime, TIMESTAMP
+from sqlalchemy.sql.sqltypes import TIMESTAMP, DateTime
 
 revision = "150720211109"
 down_revision = None

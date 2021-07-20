@@ -1,3 +1,4 @@
+"""Strings for HTTPException"""
 USER_NAME_IS_EMPTY = "Username is empty"
 EMAIL_IS_EMPTY = "E-mail is empty"
 PASSWORD_IS_EMPTY = "Password is empty"

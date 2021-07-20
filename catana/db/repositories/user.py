@@ -1,3 +1,4 @@
+"""User repository"""
 from uuid import UUID
 
 from catana.db.queries.queries import queries
@@ -7,7 +8,9 @@ from catana.models.schemas.users import UserInLogin, UserInRegister
 
 
 class UserRepository(BaseRepository):
+    """User repository"""
     async def change_user_password(self, email: str, password: str):
+        """Change user password"""
         user_db = UserInDb()
         user_db.create_password_hash(password)
         await queries.change_password(
@@ -15,14 +18,17 @@ class UserRepository(BaseRepository):
         )
 
     async def delete_user(self, email: str):
+        """Delete user by email"""
         await queries.delete_user(self.connection, email)
 
     async def get_user_id(self, email: str) -> UUID:
+        """Get user id by email"""
         response = await queries.get_user_id(self.connection, email)
         print(response)
         return response[0]["id"]
 
-    async def get_user(self, user: UserInLogin) -> bool:
+    async def login_user(self, user: UserInLogin) -> bool:
+        """Login user"""
         user_credentials = await queries.get_user_login_credentials(
             self.connection, user.email
         )
@@ -32,6 +38,7 @@ class UserRepository(BaseRepository):
         return user_db.check_password_hash(user.password)
 
     async def create_user(self, user_register: UserInRegister) -> bool:
+        """create user, return True/False"""
         if len(await queries.check_email(self.connection, user_register.email)) == 0:
             user = UserInDb()
             user.create_password_hash(user_register.password)

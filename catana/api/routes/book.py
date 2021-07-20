@@ -1,4 +1,4 @@
-"""About router"""
+"""Book router"""
 from typing import List
 from uuid import UUID
 
@@ -13,7 +13,7 @@ from catana.api.dependencies.database import get_repository
 from catana.assets.strings import BOOK_ID_IS_EMPTY, USER_TOKEN_IS_EMPY
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
-from catana.models.schemas.books import Book, BookResponse, BoughtBook
+from catana.models.schemas.books import Book, BoughtBook
 from catana.services.token import get_email_from_token
 
 router = APIRouter()
@@ -24,6 +24,7 @@ async def book_list(
     page: int,
     books_repository: BookRepository = Depends(get_repository(BookRepository)),
 ) -> JSONResponse:
+    """Get list of books"""
     books = await books_repository.get_books(page)
     return books
 
@@ -33,6 +34,7 @@ async def get_book_by_id(
     book_id: UUID,
     book_repository: BookRepository = Depends(get_repository(BookRepository)),
 ) -> JSONResponse:
+    """Return book by id"""
     return await book_repository.get_book(book_id)
 
 
@@ -42,6 +44,7 @@ async def return_book(
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
     books_repository: BookRepository = Depends(get_repository(BookRepository)),
 ) -> JSONResponse:
+    """Return borrowed book"""
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
     await books_repository.return_book(user_id, book.id)
     return JSONResponse({"message": "ok"})
@@ -53,6 +56,7 @@ async def bought_book(
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
     books_repository: BookRepository = Depends(get_repository(BookRepository)),
 ) -> JSONResponse:
+    """Assing user book"""
     if book.id == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, BOOK_ID_IS_EMPTY)
     if book.token == "":

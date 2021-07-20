@@ -1,3 +1,4 @@
+"""Configuration file"""
 import os
 
 POSTGRESQL_CONNECTION_STRING = os.getenv("POSTGRESQL_CONNECTION_STRING")
