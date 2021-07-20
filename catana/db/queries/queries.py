@@ -1,3 +1,4 @@
+"""SQL query generator"""
 import pathlib
 
 import aiosql

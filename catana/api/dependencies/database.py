@@ -1,3 +1,4 @@
+"""Database repository"""
 from typing import AsyncGenerator, Callable, Type
 
 from asyncpg.connection import Connection
@@ -22,6 +23,8 @@ async def _get_connection_from_pool(
 def get_repository(
     repo_type: Type[BaseRepository],
 ) -> Callable[[Connection], BaseRepository]:
+    """Get repository"""
+
     def _get_repo(
         conn: Connection = Depends(_get_connection_from_pool),
     ) -> BaseRepository:

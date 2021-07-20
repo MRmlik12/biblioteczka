@@ -1,3 +1,4 @@
+"""Book schemas"""
 from typing import List, Optional
 from uuid import UUID
 
@@ -5,6 +6,8 @@ from pydantic import BaseModel
 
 
 class Book(BaseModel):
+    """Book vase schema"""
+
     id: Optional[UUID]
     title: Optional[str]
     author: Optional[str]
@@ -15,9 +18,13 @@ class Book(BaseModel):
 
 
 class BoughtBook(BaseModel):
+    """Bought book"""
+
     id: UUID
     token: str
 
 
 class BookResponse:
+    """Response book list"""
+
     books: List[Book]

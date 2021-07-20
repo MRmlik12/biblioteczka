@@ -1,7 +1,11 @@
 --name: get_books
 
 SELECT *
-FROM books --name: get_book
+FROM books
+LIMIT 10
+OFFSET :offset;
+
+--name: get_book
 
 SELECT *
 FROM books
@@ -17,4 +21,7 @@ WHERE id=:book_id --name: return_book
     UPDATE books
     SET is_borrowed=FALSE,
                     user_borrow_id=NULL WHERE id=:book_id
-    AND user_borrow_id=:user_id
+    AND user_borrow_id=:user_id --name: select_user_borrows
+
+    SELECT COUNT(user_borrow_id)
+    FROM books WHERE user_borrow_id=:user_id
