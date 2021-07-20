@@ -9,10 +9,10 @@ from catana.models.schemas.books import Book
 class BookRepository(BaseRepository):
     """Book repository"""
 
-    async def is_user_assigned(self, user_id: UUID) -> bool:
+    async def is_user_not_assigned(self, user_id: UUID) -> bool:
         """Checks if user has borrowed book"""
         count = await queries.select_user_borrows(self.connection, user_id)
-        if count >= 1:
+        if int(count[0]["count"]) == 0:
             return True
         return False
 

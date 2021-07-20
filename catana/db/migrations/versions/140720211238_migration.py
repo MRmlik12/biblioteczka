@@ -8,6 +8,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.expression import null
 
 revision = "140720211238"
 down_revision = None
@@ -48,6 +49,7 @@ def create_users_table() -> None:
         sa.Column("hashed_password", sa.String, nullable=False),
         sa.Column("phone_number", sa.String, nullable=False),
         sa.Column("created_at", sa.TIMESTAMP, nullable=False),
+        sa.Column("updated_at", sa.TIMESTAMP, nullable=True)
     )
     op.execute(
         """

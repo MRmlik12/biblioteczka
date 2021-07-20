@@ -44,29 +44,29 @@ async def register_user(
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
 ) -> JSONResponse:
     """Register new user"""
-    if user_register.email == "" | user_register.email == None:
+    if user_register.email == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
-    if user_register.password == "" | user_register.password == None:
+    if user_register.password == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.PASSWORD_IS_EMPTY)
-    if user_register.username == "" | user_register.username == None:
+    if user_register.username == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.NAME_IS_EMPTY)
-    if user_register.surname == "" | user_register.surname == None:
+    if user_register.surname == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.PASSWORD_IS_EMPTY)
-    if user_register.phone_number == "" | user_register.phone_number == None:
+    if user_register.phone_number == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.PASSWORD_IS_EMPTY)
     if await user_repository.create_user(user_register):
         return JSONResponse({"token": generate_token(user_register.email)})
     raise HTTPException(HTTP_400_BAD_REQUEST, strings.USER_EMAIL_EXISTS)
 
 
-@router.put("/resetPassowrd")
+@router.put("/resetPassword")
 async def reset_password(
     user_auth: UserInResetPassword = Body(..., embed=True),
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
-) -> JSONResponse:
-    """Reset password for acctual user"""
+):
+    """Reset password for actual user"""
     try:
-        user_repository.change_user_password(
+        await user_repository.change_user_password(
             get_email_from_token(user_auth.token), user_auth.password
         )
     except Exception as exception:
@@ -80,13 +80,14 @@ async def delete_user(
     user_delete: UserAuth = Body(..., embed=True),
     user_repository: UserRepository = Depends(get_repository(UserRepository)),
     book_repository: BookRepository = Depends(get_repository(BookRepository)),
-) -> JSONResponse:
+):
     """Reset password for acctual user"""
     try:
         email = get_email_from_token(user_delete.token)
         user = await user_repository.get_user_id(email)
-        if book_repository.is_user_assigned(user):
+        if await book_repository.is_user_not_assigned(user):
             await user_repository.delete_user(email)
+            return
         raise HTTPException(HTTP_406_NOT_ACCEPTABLE, strings.USER_HAS_BORROWED_BOOKS)
     except IndexError as index_error:
         raise HTTPException(

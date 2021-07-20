@@ -39,7 +39,7 @@ LIMIT 1;
 
 DELETE
 FROM users
-WHERE email=:email --name: change_pasword
+WHERE email=:email --name: change_password
 
         UPDATE users
         SET salt=:salt,

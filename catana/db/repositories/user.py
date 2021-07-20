@@ -9,12 +9,13 @@ from catana.models.schemas.users import UserInLogin, UserInRegister
 
 class UserRepository(BaseRepository):
     """User repository"""
+
     async def change_user_password(self, email: str, password: str):
         """Change user password"""
         user_db = UserInDb()
         user_db.create_password_hash(password)
         await queries.change_password(
-            self, user_db.salt, user_db.hashed_password, email
+            self.connection, user_db.salt, user_db.hashed_password, email
         )
 
     async def delete_user(self, email: str):
@@ -24,7 +25,6 @@ class UserRepository(BaseRepository):
     async def get_user_id(self, email: str) -> UUID:
         """Get user id by email"""
         response = await queries.get_user_id(self.connection, email)
-        print(response)
         return response[0]["id"]
 
     async def login_user(self, user: UserInLogin) -> bool:

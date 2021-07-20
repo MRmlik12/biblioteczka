@@ -20,8 +20,8 @@ WHERE id=:book_id --name: return_book
 
     UPDATE books
     SET is_borrowed=FALSE,
-                    user_borrow_id=NULL WHERE id=:book_id --name: select_user_borrows
+                    user_borrow_id=NULL WHERE id=:book_id
+    AND user_borrow_id=:user_id --name: select_user_borrows
 
-    AND user_borrow_id=:user_id
-    SELECT COUNT(borrower_id)
-    FROM books WHERE borrower_id=:user_id
+    SELECT COUNT(user_borrow_id)
+    FROM books WHERE user_borrow_id=:user_id
