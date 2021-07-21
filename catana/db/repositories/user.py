@@ -1,60 +1,69 @@
 """User repository"""
 from uuid import UUID
 
-from catana.db.queries.queries import queries
-from catana.db.repositories.base import BaseRepository
-from catana.models.domain.users import UserInDb
+from catana.models.domain.users import User, UserInDb
 from catana.models.schemas.users import UserInLogin, UserInRegister
+from fastapi_sqlalchemy import db
 
 
-class UserRepository(BaseRepository):
+class UserRepository:
     """User repository"""
 
     async def change_user_password(self, email: str, password: str):
         """Change user password"""
         user_db = UserInDb()
         user_db.create_password_hash(password)
-        await queries.change_password(
-            self.connection, user_db.salt, user_db.hashed_password, email
+        db.session.query(UserInDb).filter(UserInDb.email == email).update(
+            {
+                UserInDb.salt: user_db.salt,
+                UserInDb.hashed_password: user_db.hashed_password,
+            }
         )
+        db.session.commit()
 
     async def delete_user(self, email: str):
         """Delete user by email"""
-        await queries.delete_user(self.connection, email)
+        print("XDD")
+        user = UserInDb()
+        user.email = email
+        db.session.query(UserInDb).filter(UserInDb.email == email).delete()
+        db.session.commit()
 
     async def get_user_id(self, email: str) -> UUID:
         """Get user id by email"""
-        response = await queries.get_user_id(self.connection, email)
-        return response[0]["id"]
+        response = db.session.query(UserInDb).filter_by(email=email).first()
+        return response.id
 
     async def login_user(self, user: UserInLogin) -> bool:
         """Login user"""
-        user_credentials = await queries.get_user_login_credentials(
-            self.connection, user.email
+        user_credentials = (
+            db.session.query(UserInDb).filter_by(email=user.email).first()
         )
-        user_db = UserInDb()
-        user_db.hashed_password = user_credentials[0]["hashed_password"]
-        user_db.salt = user_credentials[0]["salt"]
-        return user_db.check_password_hash(user.password)
+        if user_credentials.check_password_hash(user.password):
+            result = (
+                db.session.query(UserInDb)
+                .filter_by(hashed_password=user_credentials.hashed_password)
+                .first()
+            )
+            if result.id != None:
+                return True
+        return False
 
     async def create_user(self, user_register: UserInRegister) -> bool:
         """create user, return True/False"""
-        if len(await queries.check_email(self.connection, user_register.email)) == 0:
+        if (
+            db.session.query(UserInDb).filter_by(email=user_register.email).first()
+            == None
+        ):
             user = UserInDb()
             user.create_password_hash(user_register.password)
             user.create_timestamp()
             user.generate_id()
-            async with self.connection.transaction():
-                await queries.create_user_account(
-                    self.connection,
-                    user.id,
-                    user_register.username,
-                    user_register.surname,
-                    user_register.email,
-                    user.salt,
-                    user.hashed_password,
-                    user_register.phone_number,
-                    user.date_created,
-                )
+            user.email = user_register.email
+            user.phone_number = user_register.phone_number
+            user.username = user_register.username
+            user.surname = user_register.surname
+            db.session.add(user)
+            db.session.commit()
             return True
         return False

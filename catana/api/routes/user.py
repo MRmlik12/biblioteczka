@@ -10,7 +10,6 @@ from starlette.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from catana.api.dependencies.database import get_repository
 from catana.assets import strings
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
@@ -28,7 +27,7 @@ router = APIRouter()
 @router.post("/login")
 async def login_user(
     user_login: UserInLogin = Body(..., embed=True),
-    user_repository: UserRepository = Depends(get_repository(UserRepository)),
+    user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Login endpoint"""
     user = await user_repository.login_user(user_login)
@@ -41,7 +40,7 @@ async def login_user(
 @router.post("/register")
 async def register_user(
     user_register: UserInRegister = Body(..., embed=True),
-    user_repository: UserRepository = Depends(get_repository(UserRepository)),
+    user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Register new user"""
     if user_register.email == "":
@@ -62,7 +61,7 @@ async def register_user(
 @router.put("/resetPassword")
 async def reset_password(
     user_auth: UserInResetPassword = Body(..., embed=True),
-    user_repository: UserRepository = Depends(get_repository(UserRepository)),
+    user_repository: UserRepository = Depends(UserRepository),
 ):
     """Reset password for actual user"""
     try:
@@ -78,8 +77,8 @@ async def reset_password(
 @router.delete("/delete")
 async def delete_user(
     user_delete: UserAuth = Body(..., embed=True),
-    user_repository: UserRepository = Depends(get_repository(UserRepository)),
-    book_repository: BookRepository = Depends(get_repository(BookRepository)),
+    user_repository: UserRepository = Depends(UserRepository),
+    book_repository: BookRepository = Depends(BookRepository),
 ):
     """Reset password for acctual user"""
     try:

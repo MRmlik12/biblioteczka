@@ -4,7 +4,8 @@ from fastapi.exceptions import HTTPException
 
 from catana.api.api import router
 from catana.api.errors.error import http_error_handler
-from catana.core.events import create_start_app_handler, create_stop_app_hadler
+from fastapi_sqlalchemy import DBSessionMiddleware
+from catana.core.config import POSTGRESQL_CONNECTION_STRING
 
 
 def get_app() -> FastAPI:
@@ -14,8 +15,7 @@ def get_app() -> FastAPI:
 
     app_init.add_exception_handler(HTTPException, http_error_handler)
 
-    app_init.add_event_handler("startup", create_start_app_handler(app_init))
-    app_init.add_event_handler("shutdown", create_stop_app_hadler(app_init))
+    app_init.add_middleware(DBSessionMiddleware, db_url=POSTGRESQL_CONNECTION_STRING)
 
     return app_init
 

@@ -1,37 +1,32 @@
 """User domain"""
+from catana.models.domain.base import Base
+from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 from datetime import datetime
-from uuid import UUID, uuid4
-
-from pydantic.networks import EmailStr
+from uuid import uuid4
+from sqlalchemy import Column
+from sqlalchemy.sql.sqltypes import String
 
 from catana.services import hash
 
 
-class Address:
-    """Address entity"""
-
-    street_number: str
-    local: str
-    postal_code: int
-    city: str
-
-
-class User:
+class User(Base):
     """User entity"""
 
-    id: UUID
-    email: EmailStr
-    date_created: datetime
-    username: str
-    surname: str
-    phone_number: str
+    __tablename__ = "users"
+
+    id = Column("id", (UUID(as_uuid=True)), primary_key=True, default=uuid4)
+    username = Column("username", String, nullable=False)
+    surname = Column("surname", String, nullable=False)
+    email = Column("email", String, nullable=False)
+    salt = Column(String, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    phone_number = Column("phone_number", String, nullable=False)
+    created_at = Column("created_at", TIMESTAMP)
+    updated_at = Column("updated_at", TIMESTAMP)
 
 
 class UserInDb(User):
     """User db operations"""
-
-    salt: str
-    hashed_password: str
 
     def generate_id(self) -> None:
         """Generate user id"""
@@ -39,7 +34,7 @@ class UserInDb(User):
 
     def create_timestamp(self):
         """Create timestamp"""
-        self.date_created = datetime.utcnow()
+        self.created_at = datetime.utcnow()
 
     def create_password_hash(self, password: str):
         """create password hash"""
