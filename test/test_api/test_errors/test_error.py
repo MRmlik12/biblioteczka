@@ -1,6 +1,4 @@
 import pytest
-from fastapi import FastAPI
-from fastapi.applications import FastAPI
 from httpx import AsyncClient
 from starlette.status import HTTP_404_NOT_FOUND
 
