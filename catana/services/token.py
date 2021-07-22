@@ -1,15 +1,14 @@
 """Token service"""
 from datetime import datetime, timedelta
-from typing import Literal
 
 import jwt
 
 from catana.core.config import JWT_SECRET_KEY
 from catana.models.schemas.jwt import JWTUser
 
-SUBJECT: Literal["AUTH_TOKEN"]
-ALGORITHM: Literal["HS512"]
-TOKEN_EXPIRE_IN_MINUTES: Literal[60]
+SUBJECT = "AUTH_TOKEN"
+ALGORITHM = "HS512"
+TOKEN_EXPIRE_IN_MINUTES = 60
 
 
 def generate_token(email: str) -> str:
@@ -22,7 +21,7 @@ def generate_token(email: str) -> str:
 def get_email_from_token(token: str) -> str:
     """Try to get email from JWT"""
     try:
-        decode = jwt.decode(token, str(JWT_SECRET_KEY), list(ALGORITHM))
+        decode = jwt.decode(token, str(JWT_SECRET_KEY), ALGORITHM)  # type: ignore
         return decode["email"]
     except jwt.PyJWTError as jwt_error:
         raise ValueError("unable to decode JWT token") from jwt_error

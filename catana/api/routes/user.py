@@ -1,5 +1,5 @@
 """User router"""
-from fastapi.param_functions import Depends
+from fastapi.param_functions import Body, Depends
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import (
@@ -25,7 +25,7 @@ router = APIRouter()
 
 @router.post("/login")
 async def login_user(
-    user_login: UserInLogin,
+    user_login: UserInLogin = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Login endpoint"""
@@ -37,7 +37,7 @@ async def login_user(
 
 @router.post("/register")
 async def register_user(
-    user_register: UserInRegister,
+    user_register: UserInRegister = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Register new user"""
@@ -58,7 +58,7 @@ async def register_user(
 
 @router.put("/resetPassword")
 async def reset_password(
-    user_auth: UserInResetPassword,
+    user_auth: UserInResetPassword = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
 ) -> None:
     """Reset password for actual user"""
@@ -74,7 +74,7 @@ async def reset_password(
 
 @router.delete("/delete")
 async def delete_user(
-    user_delete: UserAuth,
+    user_delete: UserAuth = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     book_repository: BookRepository = Depends(BookRepository),
 ) -> None:

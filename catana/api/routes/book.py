@@ -1,6 +1,6 @@
 """Book router"""
 from uuid import UUID
-from fastapi.param_functions import Depends
+from fastapi.param_functions import Body, Depends
 
 from fastapi.routing import APIRouter
 from starlette.exceptions import HTTPException
@@ -37,7 +37,7 @@ async def get_book_by_id(
 
 @router.post("/return")
 async def return_book(
-    book: BoughtBook,
+    book: BoughtBook = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     books_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
@@ -49,7 +49,7 @@ async def return_book(
 
 @router.post("/bought")
 async def bought_book(
-    book: BoughtBook,
+    book: BoughtBook = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     books_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
