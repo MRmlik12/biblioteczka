@@ -1,0 +1,72 @@
+name: Test & Lint
+on: 
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: catana_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      POSTGRESQL_CONNECTION_STRING: postgresql://test:123@localhost:5432/catana_db
+      JWT_SECRET_KEY: OPdNtRVFv/lJ+sPQyvy/UDoPe4w3cE4Ld8DKWXK1hLGOoKzfyWkDVdqmwuGT2dbwyrSp5i9HOifgoKpRDpV5kg==
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 
+        uses: actions/setup-python@v2
+        with:
+          python_version: 3.8
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/local.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: install dependencies
+        run: pip install -r requirements/local.txt
+      - name: Run migrations
+        run: alembic upgrade head
+      - name: Test with Pytest
+        run: pytest
+  lint:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 
+        uses: actions/setup-python@v2
+        with:
+          python_version: 3.8
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/local.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: pip install -r requirements/local.txt
+      - name: Lint with pylint
+        run: pylint --rcfile=setup.cfg ./catana
+      - name: Check types with mypy
+        run: mypy ./catana/main.py
