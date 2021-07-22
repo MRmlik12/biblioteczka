@@ -1,4 +1,5 @@
 """User router"""
+from fastapi.param_functions import Depends
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import (
@@ -25,7 +26,7 @@ router = APIRouter()
 @router.post("/login")
 async def login_user(
     user_login: UserInLogin,
-    user_repository: UserRepository = UserRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Login endpoint"""
     user = await user_repository.login_user(user_login)
@@ -37,7 +38,7 @@ async def login_user(
 @router.post("/register")
 async def register_user(
     user_register: UserInRegister,
-    user_repository: UserRepository = UserRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
 ) -> JSONResponse:
     """Register new user"""
     if user_register.email == "":
@@ -58,7 +59,7 @@ async def register_user(
 @router.put("/resetPassword")
 async def reset_password(
     user_auth: UserInResetPassword,
-    user_repository: UserRepository = UserRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
 ) -> None:
     """Reset password for actual user"""
     try:
@@ -74,8 +75,8 @@ async def reset_password(
 @router.delete("/delete")
 async def delete_user(
     user_delete: UserAuth,
-    user_repository: UserRepository = UserRepository(),
-    book_repository: BookRepository = BookRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
+    book_repository: BookRepository = Depends(BookRepository),
 ) -> None:
     """Reset password for acctual user"""
     try:

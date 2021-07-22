@@ -1,12 +1,13 @@
 """Book router"""
 from uuid import UUID
+from fastapi.param_functions import Depends
 
 from fastapi.routing import APIRouter
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
 
-from catana.assets.strings import BOOK_ID_IS_EMPTY, USER_TOKEN_IS_EMPY
+from catana.assets import strings
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
 from catana.models.schemas.books import BoughtBook
@@ -18,7 +19,7 @@ router = APIRouter()
 @router.get("/list")
 async def book_list(
     page: int,
-    books_repository: BookRepository = BookRepository(),
+    books_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
     """Get list of books"""
     books = await books_repository.get_books(page)
@@ -28,7 +29,7 @@ async def book_list(
 @router.get("/{book_id}")
 async def get_book_by_id(
     book_id: UUID,
-    book_repository: BookRepository = BookRepository(),
+    book_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
     """Return book by id"""
     return await book_repository.get_book(book_id)
@@ -37,8 +38,8 @@ async def get_book_by_id(
 @router.post("/return")
 async def return_book(
     book: BoughtBook,
-    user_repository: UserRepository = UserRepository(),
-    books_repository: BookRepository = BookRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
+    books_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
     """Return borrowed book"""
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
@@ -49,14 +50,14 @@ async def return_book(
 @router.post("/bought")
 async def bought_book(
     book: BoughtBook,
-    user_repository: UserRepository = UserRepository(),
-    books_repository: BookRepository = BookRepository(),
+    user_repository: UserRepository = Depends(UserRepository),
+    books_repository: BookRepository = Depends(BookRepository),
 ) -> JSONResponse:
     """Assing user book"""
     if book.id == "":
-        raise HTTPException(HTTP_400_BAD_REQUEST, BOOK_ID_IS_EMPTY)
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.BOOK_ID_IS_EMPTY)
     if book.token == "":
-        raise HTTPException(HTTP_400_BAD_REQUEST, USER_TOKEN_IS_EMPY)
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.USER_TOKEN_IS_EMPY)
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
     await books_repository.reassign_user(user_id, book.id, True)
     return JSONResponse({"message": "ok"})
