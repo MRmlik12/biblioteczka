@@ -1,6 +1,4 @@
 """User router"""
-from fastapi.param_functions import Depends
-from fastapi.params import Body
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import (
@@ -26,12 +24,11 @@ router = APIRouter()
 
 @router.post("/login")
 async def login_user(
-    user_login: UserInLogin = Body(..., embed=True),
-    user_repository: UserRepository = Depends(UserRepository),
+    user_login: UserInLogin,
+    user_repository: UserRepository = UserRepository(),
 ) -> JSONResponse:
     """Login endpoint"""
     user = await user_repository.login_user(user_login)
-    print(user)
     if user:
         return JSONResponse({"token": generate_token(user_login.email)})
     raise HTTPException(HTTP_401_UNAUTHORIZED, "Wrong login credentials")
@@ -39,8 +36,8 @@ async def login_user(
 
 @router.post("/register")
 async def register_user(
-    user_register: UserInRegister = Body(..., embed=True),
-    user_repository: UserRepository = Depends(UserRepository),
+    user_register: UserInRegister,
+    user_repository: UserRepository = UserRepository(),
 ) -> JSONResponse:
     """Register new user"""
     if user_register.email == "":
@@ -60,9 +57,9 @@ async def register_user(
 
 @router.put("/resetPassword")
 async def reset_password(
-    user_auth: UserInResetPassword = Body(..., embed=True),
-    user_repository: UserRepository = Depends(UserRepository),
-):
+    user_auth: UserInResetPassword,
+    user_repository: UserRepository = UserRepository(),
+) -> None:
     """Reset password for actual user"""
     try:
         await user_repository.change_user_password(
@@ -76,10 +73,10 @@ async def reset_password(
 
 @router.delete("/delete")
 async def delete_user(
-    user_delete: UserAuth = Body(..., embed=True),
-    user_repository: UserRepository = Depends(UserRepository),
-    book_repository: BookRepository = Depends(BookRepository),
-):
+    user_delete: UserAuth,
+    user_repository: UserRepository = UserRepository(),
+    book_repository: BookRepository = BookRepository(),
+) -> None:
     """Reset password for acctual user"""
     try:
         email = get_email_from_token(user_delete.token)

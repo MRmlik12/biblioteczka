@@ -4,7 +4,13 @@ import pytest
 from fastapi import FastAPI
 from fastapi.param_functions import Body
 from httpx import AsyncClient
-from starlette.status import HTTP_200_OK, HTTP_202_ACCEPTED
+from starlette.status import (
+    HTTP_200_OK,
+    HTTP_202_ACCEPTED,
+    HTTP_400_BAD_REQUEST,
+    HTTP_401_UNAUTHORIZED,
+)
+
 from catana.services.token import generate_token
 
 pytestmark = pytest.mark.asyncio

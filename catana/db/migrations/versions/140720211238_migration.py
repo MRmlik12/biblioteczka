@@ -49,7 +49,7 @@ def create_users_table() -> None:
         sa.Column("hashed_password", sa.String, nullable=False),
         sa.Column("phone_number", sa.String, nullable=False),
         sa.Column("created_at", sa.TIMESTAMP, nullable=False),
-        sa.Column("updated_at", sa.TIMESTAMP, nullable=True)
+        sa.Column("updated_at", sa.TIMESTAMP, nullable=True),
     )
     op.execute(
         """
