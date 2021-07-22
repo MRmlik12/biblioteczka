@@ -16,4 +16,6 @@ jobs:
       - name: install dependencies
         run: pip install -r requirements/local.txt
       - name: Lint with pylint
-        run: pylint ./catana
+        run: pylint --rcfile=setup.cfg ./catana
+      - name: Check types with mypy
+        run: mypy ./catana/main.py

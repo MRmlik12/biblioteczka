@@ -1,6 +1,5 @@
 """User router"""
-from fastapi.param_functions import Depends
-from fastapi.params import Body
+from fastapi.param_functions import Body, Depends
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import (
@@ -31,7 +30,6 @@ async def login_user(
 ) -> JSONResponse:
     """Login endpoint"""
     user = await user_repository.login_user(user_login)
-    print(user)
     if user:
         return JSONResponse({"token": generate_token(user_login.email)})
     raise HTTPException(HTTP_401_UNAUTHORIZED, "Wrong login credentials")
@@ -62,7 +60,7 @@ async def register_user(
 async def reset_password(
     user_auth: UserInResetPassword = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
-):
+) -> None:
     """Reset password for actual user"""
     try:
         await user_repository.change_user_password(
@@ -79,7 +77,7 @@ async def delete_user(
     user_delete: UserAuth = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     book_repository: BookRepository = Depends(BookRepository),
-):
+) -> None:
     """Reset password for acctual user"""
     try:
         email = get_email_from_token(user_delete.token)

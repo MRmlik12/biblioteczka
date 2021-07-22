@@ -1,18 +1,16 @@
 """Book router"""
-from typing import List
 from uuid import UUID
+from fastapi.param_functions import Body, Depends
 
-from fastapi.param_functions import Body
-from fastapi.params import Depends
 from fastapi.routing import APIRouter
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
 
-from catana.assets.strings import BOOK_ID_IS_EMPTY, USER_TOKEN_IS_EMPY
+from catana.assets import strings
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
-from catana.models.schemas.books import Book, BoughtBook
+from catana.models.schemas.books import BoughtBook
 from catana.services.token import get_email_from_token
 
 router = APIRouter()
@@ -45,7 +43,7 @@ async def return_book(
 ) -> JSONResponse:
     """Return borrowed book"""
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
-    await books_repository.reassign_user(None, book.id, False)
+    await books_repository.reassign_user(user_id, book.id, False)
     return JSONResponse({"message": "ok"})
 
 
@@ -57,9 +55,9 @@ async def bought_book(
 ) -> JSONResponse:
     """Assing user book"""
     if book.id == "":
-        raise HTTPException(HTTP_400_BAD_REQUEST, BOOK_ID_IS_EMPTY)
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.BOOK_ID_IS_EMPTY)
     if book.token == "":
-        raise HTTPException(HTTP_400_BAD_REQUEST, USER_TOKEN_IS_EMPY)
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.USER_TOKEN_IS_EMPY)
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
     await books_repository.reassign_user(user_id, book.id, True)
     return JSONResponse({"message": "ok"})
