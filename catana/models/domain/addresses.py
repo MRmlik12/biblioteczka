@@ -1,7 +1,9 @@
-from sqlalchemy.sql.sqltypes import String, TIMESTAMP
-from catana.models.domain.base import Base
+"""Address"""
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import TIMESTAMP, String
+
+from catana.models.domain.base import Base
 
 
 class Address(Base):

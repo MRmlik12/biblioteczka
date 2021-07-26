@@ -1,6 +1,4 @@
 """User router"""
-from catana.db.repositories.address import AddressRepository
-from catana.models.schemas.address import Address
 from fastapi.param_functions import Body, Depends
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
@@ -12,8 +10,10 @@ from starlette.status import (
 )
 
 from catana.assets import strings
+from catana.db.repositories.address import AddressRepository
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
+from catana.models.schemas.address import Address
 from catana.models.schemas.users import (
     UserAuth,
     UserInLogin,
@@ -102,18 +102,21 @@ async def set_address(
     user_repository: UserRepository = Depends(UserRepository),
     address_repository: AddressRepository = Depends(AddressRepository),
 ):
+    """Set new address for user"""
     try:
         if user_address.street == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.STREET_IS_EMPTY)
         if user_address.local_no == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.LOCAL_NO_IS_EMPTY)
         if user_address.town == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.TOWN_IS_EMPTY)
         if user_address.postal_code == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.POSTAL_CODE_IS_EMPTY)
         user_id = await user_repository.get_user_id(
             get_email_from_token(user_address.token)
         )
         address_repository.add_address(user_address, user_id)
-    except Exception as e:
-        raise HTTPException(HTTP_500_INTERNAL_SERVER_ERROR, e) from e
+    except Exception as address_exception:
+        raise HTTPException(
+            HTTP_500_INTERNAL_SERVER_ERROR, "Internal server error"
+        ) from address_exception

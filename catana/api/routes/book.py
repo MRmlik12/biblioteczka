@@ -1,14 +1,14 @@
 """Book router"""
-from catana.db.repositories.address import AddressRepository
 from uuid import UUID
-from fastapi.param_functions import Body, Depends
 
+from fastapi.param_functions import Body, Depends
 from fastapi.routing import APIRouter
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
 
 from catana.assets import strings
+from catana.db.repositories.address import AddressRepository
 from catana.db.repositories.book import BookRepository
 from catana.db.repositories.user import UserRepository
 from catana.models.schemas.books import BoughtBook

@@ -1,9 +1,10 @@
-from uuid import UUID
-
+"""Address"""
 from pydantic.main import BaseModel
 
 
 class Address(BaseModel):
+    """Address schema"""
+
     token: str
     street: str
     local_no: str
