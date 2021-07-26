@@ -1,4 +1,6 @@
 """User router"""
+from catana.db.repositories.address import AddressRepository
+from catana.models.schemas.address import Address
 from fastapi.param_functions import Body, Depends
 from fastapi.routing import APIRouter, HTTPException
 from starlette.responses import JSONResponse
@@ -77,12 +79,14 @@ async def delete_user(
     user_delete: UserAuth = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     book_repository: BookRepository = Depends(BookRepository),
+    address_repository: AddressRepository = Depends(AddressRepository),
 ) -> None:
     """Reset password for acctual user"""
     try:
         email = get_email_from_token(user_delete.token)
         user = await user_repository.get_user_id(email)
         if await book_repository.is_user_not_assigned(user):
+            await address_repository.delete_address(user)
             await user_repository.delete_user(email)
             return
         raise HTTPException(HTTP_406_NOT_ACCEPTABLE, strings.USER_HAS_BORROWED_BOOKS)
@@ -90,3 +94,26 @@ async def delete_user(
         raise HTTPException(
             HTTP_500_INTERNAL_SERVER_ERROR, "user may probably deleted"
         ) from index_error
+
+
+@router.post("/setAddress")
+async def set_address(
+    user_address: Address = Body(..., embed=True),
+    user_repository: UserRepository = Depends(UserRepository),
+    address_repository: AddressRepository = Depends(AddressRepository),
+):
+    try:
+        if user_address.street == "":
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+        if user_address.local_no == "":
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+        if user_address.town == "":
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+        if user_address.postal_code == "":
+            raise HTTPException(HTTP_400_BAD_REQUEST, strings.EMAIL_IS_EMPTY)
+        user_id = await user_repository.get_user_id(
+            get_email_from_token(user_address.token)
+        )
+        address_repository.add_address(user_address, user_id)
+    except Exception as e:
+        raise HTTPException(HTTP_500_INTERNAL_SERVER_ERROR, e) from e
