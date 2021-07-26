@@ -41,7 +41,7 @@ jobs:
       - name: install dependencies
         run: pip install -r requirements/local.txt
       - name: Run migrations
-        run: alembic upgrade head
+        run: alembic upgrade 6ea812e97a28
       - name: Test with Pytest
         run: pytest
   lint:
