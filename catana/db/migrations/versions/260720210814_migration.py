@@ -5,7 +5,6 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.schema import ForeignKey
-from catana.models.domain.users import User
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 revision = "260720210814"
