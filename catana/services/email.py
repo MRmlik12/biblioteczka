@@ -10,11 +10,12 @@ class Email:
 
     smtp: smtplib.SMTP
 
-    def __init__(self):
+    def __init__(self, auth=False):
         """Connect to SMTP server"""
-        self.smtp = smtplib.SMTP_SSL(host=EMAIL_HOST, port=EMIAL_HOST_PORT)
+        self.smtp = smtplib.SMTP(host=EMAIL_HOST, port=EMIAL_HOST_PORT)
         self.smtp.ehlo()
-        self.smtp.login(EMAIL, EMAIL_PASSWORD)
+        if auth:
+            self.smtp.login(EMAIL, EMAIL_PASSWORD)
 
     def send(self, email: str, user_email: str, subject: str, content: str):
         """Send example email"""

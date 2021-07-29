@@ -90,9 +90,9 @@ async def delete_user(
             await user_repository.delete_user(email)
             return
         raise HTTPException(HTTP_406_NOT_ACCEPTABLE, strings.USER_HAS_BORROWED_BOOKS)
-    except IndexError as index_error:
+    except Exception as index_error:
         raise HTTPException(
-            HTTP_500_INTERNAL_SERVER_ERROR, strings.USER_MAY_PROBABLY_DELETED
+            HTTP_500_INTERNAL_SERVER_ERROR, str(strings.USER_MAY_PROBABLY_DELETED)
         ) from index_error
 
 

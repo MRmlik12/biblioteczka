@@ -13,7 +13,7 @@ LOCAL_NO_IS_EMPTY: Literal["Local number is empty"]
 POSTAL_CODE_IS_EMPTY: Literal["Postal code is empty"]
 TOWN_IS_EMPTY: Literal["Town is empty"]
 
-USER_MAY_PROBABLY_DELETED: Literal["User may probably deleted"]
+USER_MAY_PROBABLY_DELETED = "User may probably deleted"
 USER_NOT_EXISTS: Literal["User not exists"]
 
 BOOK_ID_IS_EMPTY: Literal["Book ID is empty"]

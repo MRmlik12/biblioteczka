@@ -9,6 +9,7 @@ from starlette.status import (
     HTTP_202_ACCEPTED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
 from catana.services.token import generate_token
