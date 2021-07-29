@@ -63,6 +63,6 @@ async def bought_book(
     if book.token == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.USER_TOKEN_IS_EMPY)
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
-    if address_repository.user_has_address(user_id):
+    if await address_repository.user_has_address(user_id):
         await books_repository.reassign_user(user_id, book.id, True)
     return JSONResponse({"message": "ok"})

@@ -115,7 +115,7 @@ async def set_address(
         user_id = await user_repository.get_user_id(
             get_email_from_token(user_address.token)
         )
-        address_repository.add_address(user_address, user_id)
+        await address_repository.add_address(user_address, user_id)
     except Exception as address_exception:
         raise HTTPException(
             HTTP_500_INTERNAL_SERVER_ERROR, "Internal server error"
