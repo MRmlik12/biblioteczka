@@ -25,7 +25,7 @@ celery = Celery(
 
 
 @celery.on_after_configure.connect
-def setup_periodic_tasks(sender):
+def setup_periodic_tasks(sender, **kwargs):  # pylint: disable=unused-argument
     """Celery on connect event for celery beat"""
     sender.add_periodic_task(60.0, refresh_borrow_list)
 
