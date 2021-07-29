@@ -103,20 +103,15 @@ async def set_address(
     address_repository: AddressRepository = Depends(AddressRepository),
 ):
     """Set new address for user"""
-    try:
-        if user_address.street == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.STREET_IS_EMPTY)
-        if user_address.local_no == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.LOCAL_NO_IS_EMPTY)
-        if user_address.town == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.TOWN_IS_EMPTY)
-        if user_address.postal_code == "":
-            raise HTTPException(HTTP_400_BAD_REQUEST, strings.POSTAL_CODE_IS_EMPTY)
-        user_id = await user_repository.get_user_id(
-            get_email_from_token(user_address.token)
-        )
-        await address_repository.add_address(user_address, user_id)
-    except Exception as address_exception:
-        raise HTTPException(
-            HTTP_500_INTERNAL_SERVER_ERROR, strings.INTERNAL_SERVER_ERROR
-        ) from address_exception
+    if user_address.street == "":
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.STREET_IS_EMPTY)
+    if user_address.local_no == "":
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.LOCAL_NO_IS_EMPTY)
+    if user_address.town == "":
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.TOWN_IS_EMPTY)
+    if user_address.postal_code == "":
+        raise HTTPException(HTTP_400_BAD_REQUEST, strings.POSTAL_CODE_IS_EMPTY)
+    user_id = await user_repository.get_user_id(
+        get_email_from_token(user_address.token)
+    )
+    await address_repository.add_address(user_address, user_id)
