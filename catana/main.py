@@ -14,7 +14,6 @@ def get_app() -> FastAPI:
     app_init.include_router(router, prefix="/api")
 
     app_init.add_exception_handler(HTTPException, http_error_handler)
-
     app_init.add_middleware(DBSessionMiddleware, db_url=POSTGRESQL_CONNECTION_STRING)
 
     return app_init
