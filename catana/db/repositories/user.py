@@ -50,7 +50,7 @@ class UserRepository:
         return False
 
     async def create_user(self, user_register: UserInRegister) -> bool:
-        """create user, return True/False"""
+        """Create user, return True/False"""
         if (
             db.session.query(UserInDb).filter_by(email=user_register.email).first()
             is None

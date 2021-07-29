@@ -36,27 +36,26 @@ async def get_book_by_id(
     return await book_repository.get_book(book_id)
 
 
-@router.post("/return")
+@router.put("/return")
 async def return_book(
     book: BoughtBook = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     books_repository: BookRepository = Depends(BookRepository),
     address_repository: AddressRepository = Depends(AddressRepository),
-) -> JSONResponse:
+) -> None:
     """Return borrowed book"""
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
     if address_repository.user_has_address(user_id):
         await books_repository.reassign_user(user_id, book.id, False)
-    return JSONResponse({"message": "ok"})
 
 
-@router.post("/bought")
+@router.put("/bought")
 async def bought_book(
     book: BoughtBook = Body(..., embed=True),
     user_repository: UserRepository = Depends(UserRepository),
     books_repository: BookRepository = Depends(BookRepository),
     address_repository: AddressRepository = Depends(AddressRepository),
-) -> JSONResponse:
+) -> None:
     """Assing user book"""
     if book.id == "":
         raise HTTPException(HTTP_400_BAD_REQUEST, strings.BOOK_ID_IS_EMPTY)
@@ -65,4 +64,3 @@ async def bought_book(
     user_id = await user_repository.get_user_id(get_email_from_token(book.token))
     if await address_repository.user_has_address(user_id):
         await books_repository.reassign_user(user_id, book.id, True)
-    return JSONResponse({"message": "ok"})

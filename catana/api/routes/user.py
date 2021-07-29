@@ -70,7 +70,7 @@ async def reset_password(
         )
     except Exception as exception:
         raise HTTPException(
-            HTTP_500_INTERNAL_SERVER_ERROR, "error in resetting password"
+            HTTP_500_INTERNAL_SERVER_ERROR, strings.USER_NOT_EXISTS
         ) from exception
 
 
@@ -92,7 +92,7 @@ async def delete_user(
         raise HTTPException(HTTP_406_NOT_ACCEPTABLE, strings.USER_HAS_BORROWED_BOOKS)
     except IndexError as index_error:
         raise HTTPException(
-            HTTP_500_INTERNAL_SERVER_ERROR, "user may probably deleted"
+            HTTP_500_INTERNAL_SERVER_ERROR, strings.USER_MAY_PROBABLY_DELETED
         ) from index_error
 
 
@@ -118,5 +118,5 @@ async def set_address(
         await address_repository.add_address(user_address, user_id)
     except Exception as address_exception:
         raise HTTPException(
-            HTTP_500_INTERNAL_SERVER_ERROR, "Internal server error"
+            HTTP_500_INTERNAL_SERVER_ERROR, strings.INTERNAL_SERVER_ERROR
         ) from address_exception
