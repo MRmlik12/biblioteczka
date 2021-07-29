@@ -43,7 +43,11 @@ jobs:
       - name: Run migrations
         run: alembic upgrade 6ea812e97a28
       - name: Test with Pytest
-        run: pytest
+        run: pytest --cov=./
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
   lint:
     needs: test
     runs-on: ubuntu-latest
