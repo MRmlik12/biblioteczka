@@ -9,6 +9,8 @@ from starlette.status import (
     HTTP_202_ACCEPTED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_406_NOT_ACCEPTABLE,
+    HTTP_422_UNPROCESSABLE_ENTITY,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
@@ -34,6 +36,96 @@ async def test_user_register_check_status_code_is_OK(app: FastAPI, client: Async
         method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
     )
     assert response.status_code == HTTP_200_OK
+
+
+async def test_user_register_check_status_code_is_400_when_username_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_surname_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_email_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_422_UNPROCESSABLE_ENTITY
+
+
+async def test_user_register_check_status_code_is_400_when_password_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_surnmae_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
 
 
 async def test_user_login_cheks_status_code_is_OK(app: FastAPI, client: AsyncClient):
