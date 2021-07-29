@@ -166,6 +166,86 @@ async def test_user_set_address_checks_status_code_is_OK(
     assert response.status_code == HTTP_200_OK
 
 
+async def test_user_set_address_checks_status_code_is_400_street_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "",
+            "local_no": "4",
+            "town": "Warsaw",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_street_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "",
+            "town": "Warsaw",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_street_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "XX",
+            "town": "",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_street_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "XX",
+            "town": "XXX",
+            "postal_code": "",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
 async def test_user_delete_checks_status_code_is_OK(app: FastAPI, client: AsyncClient):
     delete = {"user_delete": {"token": token}}
     response = response = await client.request(
