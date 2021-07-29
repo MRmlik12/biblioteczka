@@ -1,10 +1,11 @@
 """Books domain"""
 from uuid import uuid4
-from sqlalchemy.sql.expression import null
-from sqlalchemy.sql.schema import Column
-from sqlalchemy.sql.sqltypes import Boolean, String, TIMESTAMP
-from catana.models.domain.base import Base
+
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import TIMESTAMP, Boolean, String
+
+from catana.models.domain.base import Base
 
 
 class Book(Base):
@@ -24,5 +25,3 @@ class Book(Base):
 
 class BookInDb(Book):
     """Book db operations"""
-
-    pass

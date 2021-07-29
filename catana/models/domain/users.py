@@ -1,11 +1,12 @@
 """User domain"""
-from catana.models.domain.base import Base
-from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 from datetime import datetime
 from uuid import uuid4
+
 from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.sql.sqltypes import String
 
+from catana.models.domain.base import Base
 from catana.services import hash
 
 
@@ -18,8 +19,8 @@ class User(Base):
     username = Column("username", String, nullable=False)
     surname = Column("surname", String, nullable=False)
     email = Column("email", String, nullable=False)
-    salt = Column(String, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    salt = Column("salt", String, nullable=False)
+    hashed_password = Column("hashed_password", String, nullable=False)
     phone_number = Column("phone_number", String, nullable=False)
     created_at = Column("created_at", TIMESTAMP)
     updated_at = Column("updated_at", TIMESTAMP)
@@ -30,7 +31,7 @@ class UserInDb(User):
 
     def generate_id(self) -> None:
         """Generate user id"""
-        self.id = uuid4()
+        self.id = uuid4()  # pylint: disable=invalid-name
 
     def create_timestamp(self):
         """Create timestamp"""
