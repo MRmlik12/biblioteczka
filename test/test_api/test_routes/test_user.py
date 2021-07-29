@@ -186,7 +186,7 @@ async def test_user_set_address_checks_status_code_is_400_street_empty(
     assert response.status_code == HTTP_400_BAD_REQUEST
 
 
-async def test_user_set_address_checks_status_code_is_400_street_empty(
+async def test_user_set_address_checks_status_code_is_400_local_no_empty(
     app: FastAPI, client: AsyncClient
 ):
     set_address = {
@@ -206,7 +206,7 @@ async def test_user_set_address_checks_status_code_is_400_street_empty(
     assert response.status_code == HTTP_400_BAD_REQUEST
 
 
-async def test_user_set_address_checks_status_code_is_400_street_empty(
+async def test_user_set_address_checks_status_code_is_400_town_empty(
     app: FastAPI, client: AsyncClient
 ):
     set_address = {
@@ -226,7 +226,7 @@ async def test_user_set_address_checks_status_code_is_400_street_empty(
     assert response.status_code == HTTP_400_BAD_REQUEST
 
 
-async def test_user_set_address_checks_status_code_is_400_street_empty(
+async def test_user_set_address_checks_status_code_is_400_postal_code_empty(
     app: FastAPI, client: AsyncClient
 ):
     set_address = {
