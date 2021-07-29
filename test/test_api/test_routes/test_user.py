@@ -82,3 +82,13 @@ async def test_user_delete_checks_status_code_is_OK(app: FastAPI, client: AsyncC
         content=json.dumps(delete),
     )
     assert response.status_code == HTTP_200_OK
+
+
+async def test_user_delete_throw_HTTP_EXCEPTION(app: FastAPI, client: AsyncClient):
+    delete = {"user_delete": {"token": generate_token("jan@kowalski.xyz")}}
+    response = response = await client.request(
+        method="DELETE",
+        url=app.url_path_for("delete_user"),
+        content=json.dumps(delete),
+    )
+    assert response.status_code == HTTP_500_INTERNAL_SERVER_ERROR
