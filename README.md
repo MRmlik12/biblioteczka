@@ -1,4 +1,6 @@
 # Catana
+[![Test & Lint](https://github.com/MRmlik12/catana/actions/workflows/test-lint.yml/badge.svg)](https://github.com/MRmlik12/catana/actions/workflows/test-lint.yml)
+[![codecov](https://codecov.io/gh/MRmlik12/catana/branch/develop/graph/badge.svg?token=jv5OPgc9j7)](https://codecov.io/gh/MRmlik12/catana)
 
 Simple library management system
 

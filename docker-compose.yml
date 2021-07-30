@@ -2,26 +2,45 @@ version: '3.9'
 services: 
   app:
     build: .
-    ports: 
+    ports:
       - 8000:8000
   db:
     image: postgres:13.3
     restart: always
-    ports: 
+    ports:
       - "5432:5432"
     environment: 
-      POSTGRES_DB: db
+      POSTGRES_DB: catana_db
       POSTGRES_USER: test
       POSTGRES_PASSWORD: 123
     volumes: 
       - db-postgres:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
+    restart: always
     ports: 
-      - "88:80"
+      - "80:80"
     environment: 
       - PGADMIN_DEFAULT_EMAIL=example@example.com
       - PGADMIN_DEFAULT_PASSWORD=test
+  redis:
+    image: redis:6.2.5
+    restart: always
+    ports: 
+      - 6379:6379
+    volumes:
+      - db-redis:/db
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
 volumes: 
+  db-redis:
+    external: true
   db-postgres:
     external: true
