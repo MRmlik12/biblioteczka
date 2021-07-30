@@ -9,6 +9,9 @@ from starlette.status import (
     HTTP_202_ACCEPTED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_406_NOT_ACCEPTABLE,
+    HTTP_422_UNPROCESSABLE_ENTITY,
+    HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
 from catana.services.token import generate_token
@@ -33,6 +36,96 @@ async def test_user_register_check_status_code_is_OK(app: FastAPI, client: Async
         method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
     )
     assert response.status_code == HTTP_200_OK
+
+
+async def test_user_register_check_status_code_is_400_when_username_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_surname_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_email_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "",
+            "password": "123",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_422_UNPROCESSABLE_ENTITY
+
+
+async def test_user_register_check_status_code_is_400_when_password_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "",
+            "phone_number": "100-100-100",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_register_check_status_code_is_400_when_surnmae_empty(
+    app: FastAPI, client: AsyncClient
+):
+    user = {
+        "user_register": {
+            "username": "Jan",
+            "surname": "Kowalski",
+            "email": "jan@kowalski.com",
+            "password": "123",
+            "phone_number": "",
+        }
+    }
+    response = await client.request(
+        method="POST", url=app.url_path_for("register_user"), content=json.dumps(user)
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
 
 
 async def test_user_login_cheks_status_code_is_OK(app: FastAPI, client: AsyncClient):
@@ -72,6 +165,84 @@ async def test_user_set_address_checks_status_code_is_OK(
     )
     assert response.status_code == HTTP_200_OK
 
+async def test_user_set_address_checks_status_code_is_400_street_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "",
+            "local_no": "4",
+            "town": "Warsaw",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_local_no_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "",
+            "town": "Warsaw",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_town_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "XX",
+            "town": "",
+            "postal_code": "99-999",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
+
+
+async def test_user_set_address_checks_status_code_is_400_postal_code_empty(
+    app: FastAPI, client: AsyncClient
+):
+    set_address = {
+        "user_address": {
+            "token": token,
+            "street": "XXX",
+            "local_no": "XX",
+            "town": "XXX",
+            "postal_code": "",
+        }
+    }
+    response = response = await client.request(
+        method="POST",
+        url=app.url_path_for("set_address"),
+        content=json.dumps(set_address),
+    )
+    assert response.status_code == HTTP_400_BAD_REQUEST
 
 async def test_user_delete_checks_status_code_is_OK(app: FastAPI, client: AsyncClient):
     delete = {"user_delete": {"token": token}}
@@ -81,3 +252,13 @@ async def test_user_delete_checks_status_code_is_OK(app: FastAPI, client: AsyncC
         content=json.dumps(delete),
     )
     assert response.status_code == HTTP_200_OK
+
+
+async def test_user_delete_throw_HTTP_EXCEPTION(app: FastAPI, client: AsyncClient):
+    delete = {"user_delete": {"token": generate_token("jan@kowalski.xyz")}}
+    response = response = await client.request(
+        method="DELETE",
+        url=app.url_path_for("delete_user"),
+        content=json.dumps(delete),
+    )
+    assert response.status_code == HTTP_500_INTERNAL_SERVER_ERROR

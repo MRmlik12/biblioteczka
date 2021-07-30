@@ -9,6 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
+      email:
+        image: flaviovs/mock-smtp
+        ports:
+          - 433:25
       postgres:
         image: postgres
         env:

@@ -39,7 +39,7 @@ def refresh_borrow_list() -> bool:
         for book in books:
             if book.is_borrowed and book.updated_at.month - datetime.now().month == 0:
                 user = session.query(UserInDb).filter_by(id=book.user_borrow_id).first()
-                email.Email().send(
+                email.Email(True).send(
                     EMAIL,
                     user.email,
                     RETURN_BORROWED_BOOK_SUBJECT,

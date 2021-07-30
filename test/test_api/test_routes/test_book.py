@@ -73,7 +73,7 @@ async def test_bought_book_check_status_code_is_OK(app: FastAPI, client: AsyncCl
         }
     }
     response = await client.request(
-        method="POST", url=app.url_path_for("bought_book"), content=json.dumps(book)
+        method="PUT", url=app.url_path_for("bought_book"), content=json.dumps(book)
     )
     assert response.status_code == HTTP_200_OK
 
@@ -86,6 +86,6 @@ async def test_return_book_check_status_code_is_OK(app: FastAPI, client: AsyncCl
         }
     }
     response = await client.request(
-        method="POST", url=app.url_path_for("bought_book"), content=json.dumps(book)
+        method="PUT", url=app.url_path_for("bought_book"), content=json.dumps(book)
     )
     assert response.status_code == HTTP_200_OK
